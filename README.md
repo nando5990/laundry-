@@ -1,107 +1,131 @@
-# FreshFold — Phase 1 public site
+# FreshFold — Phase 1 site + Phase 2 booking MVP
 
-Premium laundry pickup & delivery marketing site for Massachusetts (Canton, Stoughton, and sample Brockton / Mattapan ZIPs). **Brand: FreshFold only** (not Laundryr) on the customer-facing site.
+Premium laundry pickup & delivery for Massachusetts (Canton, Stoughton, and sample Brockton / Mattapan ZIPs). **Brand: FreshFold only** (not Laundryr).
 
-Phase 1 is **demo-safe**: clearly marked sample data, no live Stripe / Supabase / Resend.
+| Phase | What |
+| --- | --- |
+| **1** | Marketing site (demo-safe). Works with `npm run dev` alone. |
+| **2** | Postgres + Hono API + auth, booking, portal, admin. Optional Stripe/Resend behind env flags. |
 
-## Stack
+**Data platform:** plain **PostgreSQL** (Docker Compose locally). Schema is portable SQL — production can be Neon, RDS, self-hosted, or “Supabase Postgres-as-host only” if you choose. There is **no Supabase Auth / Supabase JS client**.
 
-- React + Vite + TypeScript
-- Tailwind CSS v4 + shadcn-style UI primitives
-- React Router
-- Netlify-ready (`netlify.toml` SPA redirects)
-- Fonts: Manrope (display) + Inter (body)
-- Colors: navy `#132238`, teal `#14B8A6`, off-white `#F8FAF9`, white `#FFFFFF`, dark `#182230`, muted `#667085`
+## Local URLs
 
-## Setup
+| Service | URL |
+| --- | --- |
+| Vite marketing + portal UI | http://localhost:5173 |
+| API health | http://localhost:8787/health |
+| Customer portal (after login) | http://localhost:5173/app |
+| Admin (after admin login) | http://localhost:5173/admin |
+
+Phase 1 marketing pages still work if the API is down — `/book` falls back to labeled demo mode.
+
+## Quick start (Phase 1 only)
 
 ```bash
 npm install
-cp .env.example .env   # VITE_DEMO_MODE=true
-npm run dev            # http://localhost:5173
+cp .env.example .env
+# leave VITE_API_URL unset (or stop the API) for pure demo
+npm run dev
 ```
+
+## Quick start (Phase 2 — Postgres + API + Vite)
 
 ```bash
-npm run build          # production build → dist/
-npm run preview        # preview production build
+# 1) Postgres
+docker compose up -d postgres
+# (or any Postgres 16+ and set DATABASE_URL)
+
+# 2) API
+cd server && npm install && cp .env.example .env
+npm run db:setup          # migrate + seed
+npm run dev               # http://localhost:8787
+
+# 3) Web (repo root)
+cd .. && npm install
+cp .env.example .env      # includes VITE_API_URL=http://localhost:8787
+npm run dev               # http://localhost:5173
 ```
 
-Deploy: connect the GitHub repo to Netlify (build command `npm run build`, publish `dist`).
+Root helpers: `npm run api`, `npm run db:migrate`, `npm run db:seed`, `npm run db:up`.
 
-## Routes
+### Seeded credentials
 
-| Path | Page |
+| Role | Email | Password |
+| --- | --- | --- |
+| Customer | `customer@freshfold.example` | `password123` |
+| Admin | `admin@freshfold.example` | `password123` |
+
+### Demo ZIPs (seeded `service_zones`)
+
+`02021` Canton · `02072` Stoughton · `02301`/`02302` Brockton · `02126` Mattapan
+
+## Env vars
+
+### Web (`.env`)
+
+| Var | Purpose |
 | --- | --- |
-| `/` | Home — Grand Slam hero, ZIP checker, how it works, experience, pricing, value stack, before/after, First Pickup offer, areas, FAQ, final CTA |
-| `/how-it-works` | Pickup → process → deliver |
-| `/pricing` | Plans, specialty quotes, First Pickup Special, Care Promise |
-| `/book` | Multi-step demo booking through review; payment = Phase 2 (no charge) |
-| `/service-areas` | Demo ZIP list + checker |
-| `/commercial` | Light commercial pitch + demo inquiry form |
-| `/about` | Brand story (no fake bios) |
-| `/contact` | Channels + demo contact form |
-| `/faq` | Offer / pricing / Care Promise / areas |
-| `/privacy` | Draft placeholder |
-| `/terms` | Draft placeholder |
-| `/login` | Auth UI shell (Phase 2) |
+| `VITE_DEMO_MODE` | Demo banner on marketing site |
+| `VITE_API_URL` | Phase 2 API base (e.g. `http://localhost:8787`). If unset/unreachable → demo fallback |
+| `VITE_STRIPE_PUBLISHABLE_KEY` | Optional future Elements (test `pk_test_…`) |
 
-Reviews section is mounted but **hidden** until verified reviews exist (`REVIEWS_ENABLED` in `src/lib/constants.ts`).
+### API (`server/.env`)
 
-## Demo ZIPs
+| Var | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Postgres connection string |
+| `PORT` | Default `8787` |
+| `CORS_ORIGIN` | Default `http://localhost:5173` |
+| `SESSION_SECRET` | Session hardening note (tokens are random; cookie httpOnly) |
+| `STRIPE_SECRET_KEY` | Optional test `sk_test_…` for SetupIntent; stubbed if missing |
+| `STRIPE_WEBHOOK_SECRET` | TODO webhook idempotency |
+| `RESEND_API_KEY` | Optional booking confirmation email; logs if missing |
+| `EMAIL_FROM` | Resend from address |
 
-Configurable in `src/demo/zips.ts`:
-
-| ZIP | City | Note |
-| --- | --- | --- |
-| `02021` | Canton | Launch ZIP |
-| `02072` | Stoughton | Launch ZIP |
-| `02301` | Brockton | Sample launch ZIP |
-| `02302` | Brockton | Sample launch ZIP |
-| `02126` | Mattapan | Sample launch ZIP |
-
-Out-of-area ZIPs show an honest unavailable message (no fake waitlist).
-
-## Pricing (display)
-
-| Plan | Rate | Minimum |
-| --- | --- | --- |
-| One-time wash & fold | $2.99/lb | $89.99 |
-| Weekly | $2.69/lb | $79.99 |
-| Express | $3.29/lb | $99.99 |
-| Specialty items | Request a quote | — |
-
-**First Pickup Special:** 10% off first completed order, max $15 (eligibility rules on Pricing / FAQ).  
-**Care Promise:** quality / rewash language on Pricing & FAQ (legal copy TBD).
-
-## Demo vs Phase 2
-
-| Capability | Phase 1 (this repo) | Phase 2+ |
-| --- | --- | --- |
-| Marketing pages & design system | Live | — |
-| ZIP checker | Client demo list | Server-enforced `service_zones` |
-| Booking flow | Multi-step UI through review | Auth + Edge booking APIs |
-| Payment | Disabled placeholders — **do not charge** | Stripe SetupIntent / settle after weight |
-| Contact / commercial forms | `localStorage` + “demo — not submitted” | Resend / ops alerts |
-| Login | UI shell only | Supabase Auth + RLS |
-| Reviews | Hidden until verified | Enable when real reviews exist |
-| GPS / driver tracking / fake testimonials | Not included | Ops surfaces later |
-
-## Project layout
+## Architecture (Phase 2)
 
 ```text
-src/
-  components/layout|marketing|seo|ui
-  demo/          # ZIPs, pricing, FAQ, booking fixtures, form store
-  pages/         # one file per public route
-  lib/           # cn(), brand constants
-  routes.tsx
+src/                 Vite React marketing + /app + /admin
+server/
+  drizzle/           Portable SQL migrations
+  src/db/            Drizzle schema, migrate, seed
+  src/routes/        auth, catalog, bookings, portal, admin
+  src/services/      Stripe + Resend (env-gated)
+  docs/access-policies.md
+docker-compose.yml   Local Postgres 16
 ```
 
-## Gaps / TODOs before go-live
+**Pricing (server-only):** `MAX(weight_lb × rate_per_lb, minimum)` — estimate uses bag→lb heuristic when weight unknown; admin weight recording recalculates invoice. Client totals are never trusted.
 
-- Exact launch ZIP list confirmation
-- Verified legal entity, address, phone, email (JSON-LD TODOs in `JsonLd.tsx`)
-- Counsel-approved Privacy, Terms, and Care Promise wording
-- Brand mark / logo SVG assets
-- Supabase, Stripe, Resend credentials (Phase 2)
-- Netlify production domain DNS
+**Auth:** email/password + httpOnly session cookies (`sessions` table). Not Supabase Auth.
+
+**Access control:** API session role — see `server/docs/access-policies.md` (RLS-equivalent).
+
+## Acceptance checklist (Phase 2)
+
+- [x] Postgres schema + migrations for profiles/roles, addresses, zones, services, pricing, specialty, preferences, windows, bookings/orders, items, status events, payments stubs, discounts, business_settings, audit
+- [x] API enforces customer-own vs admin; policies documented
+- [x] Sign up / login / session; `/app` protected
+- [x] Booking: ZIP eligibility, capacity (no double-book), create, server quote
+- [x] `/book` uses API when `VITE_API_URL` healthy; labeled demo fallback otherwise
+- [x] Customer portal: upcoming, history, preferences
+- [x] Admin: today’s pickups, orders, weight→invoice, status
+- [x] Stripe SetupIntent behind env (stub if missing); charge-after-weight TODO stub
+- [x] Resend confirmation behind env (log if missing)
+
+## Stripe / Resend
+
+- Without keys: booking still works; payment payload shows stub reason; email is console-logged.
+- With **test** Stripe secret: API creates SetupIntent (no live claim). Charge-after-weight remains stubbed until ops enable PaymentIntent + idempotent webhooks.
+- Storage for delivery proofs: Phase 3 — use local/S3-shaped stubs then.
+
+## Gaps
+
+- Stripe Elements UI not wired (SetupIntent client_secret returned when keys exist)
+- Webhook handler / idempotent `stripe_event_id` settlement not implemented
+- Magic-link auth not implemented (password only)
+- Driver / partner portals = Phase 3
+- Recurring automation = Phase 4
+- Exact launch ZIP list still owner-confirmed
+- Legal pages / Care Promise counsel copy still TBD

@@ -29,6 +29,8 @@ export interface BookingDraft {
   zip: string
   pickupDay: string
   pickupWindow: string
+  /** Set when booking against live API windows */
+  pickupWindowId: string
   detergent: string
   softener: string
   foldStyle: string
@@ -48,6 +50,7 @@ export const EMPTY_BOOKING: BookingDraft = {
   zip: '',
   pickupDay: '',
   pickupWindow: '',
+  pickupWindowId: '',
   detergent: 'hypoallergenic',
   softener: 'none',
   foldStyle: 'standard',

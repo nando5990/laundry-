@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { PageMeta } from '@/components/seo/PageMeta'
@@ -31,16 +31,31 @@ import {
   PRICING_PLANS,
 } from '@/demo/pricing'
 import { isDemoServiceZip, lookupDemoZip, normalizeZip } from '@/demo/zips'
+import { apiFetch } from '@/lib/api'
+import { useAuth } from '@/lib/auth-context'
 import { cn } from '@/lib/utils'
+
+type ApiWindow = {
+  id: string
+  serviceDate: string
+  windowLabel: string
+  remaining: number
+}
 
 function stepIndex(step: BookingStep) {
   return BOOKING_STEPS.findIndex((s) => s.id === step)
 }
 
 export function BookPage() {
+  const { user, apiOnline } = useAuth()
+  const live = apiOnline
   const [step, setStep] = useState<BookingStep>('service')
   const [draft, setDraft] = useState<BookingDraft>(EMPTY_BOOKING)
   const [errors, setErrors] = useState<string[]>([])
+  const [apiWindows, setApiWindows] = useState<ApiWindow[]>([])
+  const [submitting, setSubmitting] = useState(false)
+  const [submitResult, setSubmitResult] = useState<string | null>(null)
+  const [quoteLabel, setQuoteLabel] = useState<string | null>(null)
 
   const plan = useMemo(
     () => PRICING_PLANS.find((p) => p.id === draft.planId)!,
@@ -48,6 +63,41 @@ export function BookPage() {
   )
 
   const zipMatch = lookupDemoZip(draft.zip)
+
+  useEffect(() => {
+    if (!live) return
+    void (async () => {
+      const res = await apiFetch<{ windows: ApiWindow[] }>('/catalog/windows')
+      if (res.ok) setApiWindows(res.data.windows)
+    })()
+  }, [live])
+
+  useEffect(() => {
+    if (!live) {
+      setQuoteLabel(null)
+      return
+    }
+    void (async () => {
+      const bags = Number.parseInt(draft.estimatedBags, 10) || 2
+      const res = await apiFetch<{
+        totalCents: number
+        discountCents: number
+        estimatedWeightLb: number
+      }>('/bookings/quote', {
+        method: 'POST',
+        body: JSON.stringify({
+          serviceCode: draft.planId,
+          estimatedBags: bags,
+          applyFirstPickup: draft.applyFirstPickup,
+        }),
+      })
+      if (res.ok) {
+        setQuoteLabel(
+          `Server estimate $${(res.data.totalCents / 100).toFixed(2)} (~${res.data.estimatedWeightLb} lb)${res.data.discountCents ? ` incl. −$${(res.data.discountCents / 100).toFixed(2)} promo` : ''}`,
+        )
+      }
+    })()
+  }, [live, draft.planId, draft.estimatedBags, draft.applyFirstPickup])
 
   function update<K extends keyof BookingDraft>(key: K, value: BookingDraft[K]) {
     setDraft((d) => ({ ...d, [key]: value }))
@@ -73,8 +123,12 @@ export function BookPage() {
       }
       case 'schedule': {
         const next: string[] = []
-        if (!draft.pickupDay) next.push('Choose a pickup day.')
-        if (!draft.pickupWindow) next.push('Choose a pickup window.')
+        if (live) {
+          if (!draft.pickupWindowId) next.push('Choose an available pickup window.')
+        } else {
+          if (!draft.pickupDay) next.push('Choose a pickup day.')
+          if (!draft.pickupWindow) next.push('Choose a pickup window.')
+        }
         return next
       }
       default:
@@ -82,10 +136,66 @@ export function BookPage() {
     }
   }
 
+  async function submitLiveBooking() {
+    if (!user) {
+      setErrors(['Sign in to create a live booking, or continue in demo mode with the API offline.'])
+      return
+    }
+    setSubmitting(true)
+    setSubmitResult(null)
+    const bags = Number.parseInt(draft.estimatedBags, 10) || 2
+    const res = await apiFetch<{
+      booking: { id: string }
+      order: { id: string }
+      estimateCents: number
+      payment: { stubbed: boolean; reason: string | null } | null
+      pickup: { date: string; window: string }
+    }>('/bookings', {
+      method: 'POST',
+      body: JSON.stringify({
+        serviceCode: draft.planId,
+        estimatedBags: bags,
+        applyFirstPickup: draft.applyFirstPickup,
+        pickupWindowId: draft.pickupWindowId,
+        address: {
+          street: draft.street,
+          unit: draft.unit || undefined,
+          city: draft.city,
+          state: 'MA',
+          zip: draft.zip,
+        },
+        preferences: {
+          detergent: draft.detergent,
+          softener: draft.softener,
+          foldStyle: draft.foldStyle,
+          notes: draft.notes || undefined,
+        },
+        notes: draft.notes || undefined,
+        createSetupIntent: true,
+      }),
+    })
+    setSubmitting(false)
+    if (!res.ok) {
+      setErrors([res.error])
+      return
+    }
+    const payNote = res.data.payment?.stubbed
+      ? ` Payment: ${res.data.payment.reason ?? 'stubbed (no Stripe key)'}.`
+      : ' SetupIntent created in Stripe test mode (if configured).'
+    setSubmitResult(
+      `Booking ${res.data.booking.id.slice(0, 8)}… scheduled for ${res.data.pickup.date} ${res.data.pickup.window}. Estimate $${(res.data.estimateCents / 100).toFixed(2)}.${payNote}`,
+    )
+    setStep('payment')
+  }
+
   function goNext() {
     const nextErrors = validateCurrent()
     if (nextErrors.length) {
       setErrors(nextErrors)
+      return
+    }
+    if (step === 'review' && live) {
+      void submitLiveBooking()
       return
     }
     const i = stepIndex(step)
@@ -115,15 +225,32 @@ export function BookPage() {
           <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
             FreshFold
           </p>
-          <Badge variant="demo">Demo booking</Badge>
+          {live ? (
+            <Badge>Live API booking</Badge>
+          ) : (
+            <Badge variant="demo">Demo fallback — API offline</Badge>
+          )}
         </div>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy md:text-4xl">
           Book a pickup
         </h1>
         <p className="mt-3 text-muted">
           Walk through service, address, schedule, preferences, and review.
-          Payment is marked Phase 2 and will not charge a card.
+          {live
+            ? ' Quotes and booking hit the Postgres-backed API. Stripe SetupIntent runs only when keys are set (test mode).'
+            : ' API unreachable or VITE_API_URL unset — Phase 1 demo flow; nothing is charged or stored on a server.'}
         </p>
+        {live && !user && (
+          <p className="mt-3 text-sm text-warning">
+            Sign in before the review step to create a real booking.{' '}
+            <Link to="/login" className="font-semibold underline">
+              Log in
+            </Link>
+          </p>
+        )}
+        {quoteLabel && (
+          <p className="mt-3 text-sm font-medium text-navy">{quoteLabel}</p>
+        )}
 
         <ol className="mt-8 flex flex-wrap gap-2">
           {BOOKING_STEPS.map((s, i) => {
@@ -314,46 +441,85 @@ export function BookPage() {
               <h2 className="font-display text-xl font-bold text-navy">
                 Pickup schedule
               </h2>
-              <p className="text-sm text-muted">
-                Demo windows only — live capacity calendars arrive in Phase 2.
-                No GPS or live driver tracking.
-              </p>
-              <div className="space-y-2">
-                <Label>Pickup day</Label>
-                <Select
-                  value={draft.pickupDay}
-                  onValueChange={(v) => update('pickupDay', v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select day" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DEMO_PICKUP_DAYS.map((d) => (
-                      <SelectItem key={d} value={d}>
-                        {d}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Pickup window</Label>
-                <Select
-                  value={draft.pickupWindow}
-                  onValueChange={(v) => update('pickupWindow', v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select window" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {DEMO_PICKUP_WINDOWS.map((w) => (
-                      <SelectItem key={w} value={w}>
-                        {w}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {live ? (
+                <>
+                  <p className="text-sm text-muted">
+                    Live windows from Postgres — capacity enforced server-side
+                    (no double-book). No GPS tracking.
+                  </p>
+                  <div className="space-y-2">
+                    <Label>Available window</Label>
+                    <Select
+                      value={draft.pickupWindowId}
+                      onValueChange={(id) => {
+                        const w = apiWindows.find((x) => x.id === id)
+                        setDraft((d) => ({
+                          ...d,
+                          pickupWindowId: id,
+                          pickupDay: w?.serviceDate ?? d.pickupDay,
+                          pickupWindow: w?.windowLabel ?? d.pickupWindow,
+                        }))
+                        setErrors([])
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select window" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {apiWindows.map((w) => (
+                          <SelectItem key={w.id} value={w.id}>
+                            {w.serviceDate} · {w.windowLabel} (
+                            {w.remaining} left)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm text-muted">
+                    Demo windows only — API offline. No GPS or live driver
+                    tracking.
+                  </p>
+                  <div className="space-y-2">
+                    <Label>Pickup day</Label>
+                    <Select
+                      value={draft.pickupDay}
+                      onValueChange={(v) => update('pickupDay', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select day" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DEMO_PICKUP_DAYS.map((d) => (
+                          <SelectItem key={d} value={d}>
+                            {d}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Pickup window</Label>
+                    <Select
+                      value={draft.pickupWindow}
+                      onValueChange={(v) => update('pickupWindow', v)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select window" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DEMO_PICKUP_WINDOWS.map((w) => (
+                          <SelectItem key={w} value={w}>
+                            {w}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -479,16 +645,26 @@ export function BookPage() {
                 <h2 className="font-display text-xl font-bold text-navy">
                   Payment
                 </h2>
-                <Badge variant="demo">Phase 2 demo — do not charge</Badge>
+                <Badge variant="demo">
+                  {live
+                    ? 'SetupIntent test mode / stub — no live charge'
+                    : 'Demo — do not charge'}
+                </Badge>
               </div>
+              {submitResult && (
+                <p className="rounded-md border border-success/30 bg-white px-4 py-3 text-sm text-navy">
+                  {submitResult}
+                </p>
+              )}
               <div className="rounded-md border border-warning/40 bg-warning/10 p-5">
                 <p className="font-medium text-navy">
-                  No payment is collected on this site.
+                  Cards are never charged from this UI.
                 </p>
                 <p className="mt-2 text-sm text-muted">
-                  Live Stripe SetupIntent / settlement-after-weight arrives in
-                  Phase 2. Card fields below are disabled placeholders so you
-                  can see the flow without any charge risk.
+                  With STRIPE_SECRET_KEY set, the API creates a SetupIntent to
+                  save a method. Charge-after-weight is stubbed with TODOs until
+                  keys and ops sign-off. Without keys, payment is clearly
+                  stubbed in the API response.
                 </p>
               </div>
               <div className="space-y-3 opacity-60">
@@ -507,13 +683,13 @@ export function BookPage() {
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-success">
-                Demo complete — your review details stayed in this browser
-                session only. Nothing was charged or emailed.
-              </p>
-              <Button asChild variant="secondary">
-                <Link to="/">Back to home</Link>
-              </Button>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild variant="secondary">
+                  <Link to={live ? '/app' : '/'}>
+                    {live ? 'Go to portal' : 'Back to home'}
+                  </Link>
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -524,12 +700,18 @@ export function BookPage() {
               type="button"
               variant="secondary"
               onClick={goBack}
-              disabled={step === 'service'}
+              disabled={step === 'service' || submitting}
             >
               Back
             </Button>
-            <Button type="button" onClick={goNext}>
-              {step === 'review' ? 'Continue to payment demo' : 'Continue'}
+            <Button type="button" onClick={() => void goNext()} disabled={submitting}>
+              {submitting
+                ? 'Submitting…'
+                : step === 'review'
+                  ? live
+                    ? 'Submit booking'
+                    : 'Continue to payment demo'
+                  : 'Continue'}
             </Button>
           </div>
         )}
