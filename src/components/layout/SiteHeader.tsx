@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { useAuth } from '@/lib/auth-context'
 import { BRAND } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
@@ -24,6 +25,7 @@ const NAV = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
+  const { user, logout } = useAuth()
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-navy/95 text-white backdrop-blur">
@@ -50,9 +52,27 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Button asChild variant="outline" size="sm">
-            <Link to="/login">Log in</Link>
-          </Button>
+          {user ? (
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link to={user.role === 'admin' ? '/admin' : '/app'}>
+                  {user.role === 'admin' ? 'Admin' : 'Portal'}
+                </Link>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => void logout()}
+              >
+                Log out
+              </Button>
+            </>
+          ) : (
+            <Button asChild variant="outline" size="sm">
+              <Link to="/login">Log in</Link>
+            </Button>
+          )}
           <Button asChild size="sm">
             <Link to="/book">Book pickup</Link>
           </Button>

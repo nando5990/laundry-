@@ -2,6 +2,8 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { PublicLayout } from '@/components/layout/PublicLayout'
 import { AboutPage } from '@/pages/AboutPage'
+import { AdminPage } from '@/pages/AdminPage'
+import { AppPortalPage } from '@/pages/AppPortalPage'
 import { BookPage } from '@/pages/BookPage'
 import { CommercialPage } from '@/pages/CommercialPage'
 import { ContactPage } from '@/pages/ContactPage'
@@ -30,6 +32,8 @@ export function AppRoutes() {
         <Route path="privacy" element={<PrivacyPage />} />
         <Route path="terms" element={<TermsPage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="app" element={<AppPortalPage />} />
+        <Route path="admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
