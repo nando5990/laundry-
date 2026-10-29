@@ -39,8 +39,6 @@ export interface BookingDraft {
   foldStyle: string
   notes: string
   applyFirstPickup: boolean
-  /** Selected fixed-price retail add-on ids (see RETAIL_ADDONS). */
-  retailAddonIds: string[]
 }
 
 export const EMPTY_BOOKING: BookingDraft = {
@@ -62,7 +60,6 @@ export const EMPTY_BOOKING: BookingDraft = {
   foldStyle: 'standard',
   notes: '',
   applyFirstPickup: true,
-  retailAddonIds: [],
 }
 
 export const DEMO_PICKUP_DAYS = [

@@ -36,7 +36,6 @@ import {
   FIRST_PICKUP_SPECIAL,
   formatMoney,
   PRICING_PLANS,
-  RETAIL_ADDONS,
 } from '@/demo/pricing'
 import { isDemoServiceZip, lookupDemoZip, normalizeZip } from '@/demo/zips'
 import { cn } from '@/lib/utils'
@@ -320,61 +319,6 @@ export function BookPage() {
                   reference in demo; not charged here.
                 </span>
               </label>
-
-              <div className="space-y-3">
-                <h2 className="font-display text-xl font-bold text-navy">
-                  Accessories (optional)
-                </h2>
-                <p className="text-sm text-muted">
-                  Fixed retail price — not laundry by the pound. Demo only; not
-                  charged here.
-                </p>
-                {RETAIL_ADDONS.map((item) => {
-                  const checked = draft.retailAddonIds.includes(item.id)
-                  return (
-                    <label
-                      key={item.id}
-                      className={cn(
-                        'flex cursor-pointer gap-4 rounded-2xl border p-3',
-                        checked
-                          ? 'border-teal bg-teal/5'
-                          : 'border-border bg-white',
-                      )}
-                    >
-                      <input
-                        type="checkbox"
-                        className="mt-2"
-                        checked={checked}
-                        onChange={(e) => {
-                          setDraft((d) => ({
-                            ...d,
-                            retailAddonIds: e.target.checked
-                              ? [...d.retailAddonIds, item.id]
-                              : d.retailAddonIds.filter((id) => id !== item.id),
-                          }))
-                          setErrors([])
-                        }}
-                      />
-                      <img
-                        src={item.image}
-                        alt={item.imageAlt}
-                        className="size-16 shrink-0 rounded-lg object-contain bg-petal/40 p-1"
-                      />
-                      <span className="text-sm">
-                        <span className="block font-display font-semibold text-navy">
-                          {item.name}
-                        </span>
-                        <span className="mt-0.5 block font-semibold text-teal-dark">
-                          {formatMoney(item.price)}
-                        </span>
-                        <span className="mt-1 block text-muted">
-                          {item.description}
-                        </span>
-                      </span>
-                    </label>
-                  )
-                })}
-              </div>
             </div>
           )}
 
@@ -704,19 +648,6 @@ export function BookPage() {
                     draft.applyFirstPickup
                       ? `${FIRST_PICKUP_SPECIAL.discountPercent}% up to $${FIRST_PICKUP_SPECIAL.maxDiscountDollars} (demo reference)`
                       : 'Not applied',
-                  ],
-                  [
-                    'Accessories',
-                    draft.retailAddonIds.length
-                      ? draft.retailAddonIds
-                          .map((id) => {
-                            const item = RETAIL_ADDONS.find((a) => a.id === id)
-                            return item
-                              ? `${item.name} (${formatMoney(item.price)})`
-                              : id
-                          })
-                          .join('; ')
-                      : 'None',
                   ],
                   ['Name', draft.fullName],
                   ['Email', draft.email],
