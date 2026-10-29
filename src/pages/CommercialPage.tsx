@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { SectionMedia } from '@/components/marketing/SectionMedia'
 import { PageMeta } from '@/components/seo/PageMeta'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -42,17 +43,26 @@ export function CommercialPage() {
         description="Light commercial laundry pickup for salons, clinics, offices, and short-term rentals in Massachusetts. Demo inquiry form only."
       />
       <section className="section-pad mx-auto max-w-6xl py-14 md:py-20">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
-          FreshFold
-        </p>
-        <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
-          Commercial laundry
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted">
-          Reliable pickup windows for light commercial accounts — salons,
-          clinics, offices, and short-term rentals — without commodity pricing
-          pressure.
-        </p>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
+              FreshFold
+            </p>
+            <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
+              Commercial laundry
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-muted">
+              Reliable pickup windows for light commercial accounts — salons,
+              clinics, offices, and short-term rentals — without commodity
+              pricing pressure.
+            </p>
+          </div>
+          <SectionMedia
+            src="/images/fresh-bed.jpg"
+            alt="Hospitality-ready bedding for short-term rentals and light commercial accounts"
+            className="aspect-[5/4]"
+          />
+        </div>
 
         <ul className="mt-10 grid gap-6 sm:grid-cols-3">
           {[

@@ -12,17 +12,26 @@ export function HowItWorksPage() {
         description="Schedule pickup, we wash and finish with your preferences, then deliver folded laundry to your door."
       />
       <section className="section-pad mx-auto max-w-6xl py-14 md:py-20">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
-          FreshFold
-        </p>
-        <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
-          How FreshFold works
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted">
-          An asset-light model: we own your experience end-to-end while
-          processing partners handle the wash — so you get reliability without
-          laundry-day chaos.
-        </p>
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
+              FreshFold
+            </p>
+            <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
+              How FreshFold works
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-muted">
+              An asset-light model: we own your experience end-to-end while
+              processing partners handle the wash — so you get reliability
+              without laundry-day chaos.
+            </p>
+          </div>
+          <img
+            src="/images/freshfold-hero.png"
+            alt="FreshFold branded graphic: Book, Pickup, Clean, Deliver with laundry bag and van"
+            className="h-auto w-full object-contain"
+          />
+        </div>
       </section>
       <HowItWorksSteps />
       <section className="section-pad mx-auto max-w-6xl py-14">

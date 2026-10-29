@@ -1,5 +1,7 @@
 import { CalendarCheck, Leaf, Package, Scale, Sparkles } from 'lucide-react'
 
+import { SectionMedia } from '@/components/marketing/SectionMedia'
+
 const ITEMS = [
   {
     icon: Package,
@@ -31,13 +33,22 @@ const ITEMS = [
 export function ValueStack() {
   return (
     <section className="section-pad mx-auto max-w-6xl py-16 md:py-20">
-      <h2 className="font-display text-3xl font-bold text-navy md:text-4xl">
-        What’s included
-      </h2>
-      <p className="mt-3 max-w-2xl text-muted">
-        Premium convenience for busy households — not the cheapest pound, the
-        laundry day you get back.
-      </p>
+      <div className="grid items-end gap-8 lg:grid-cols-[1.4fr_0.8fr]">
+        <div>
+          <h2 className="font-display text-3xl font-bold text-navy md:text-4xl">
+            What’s included
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Premium convenience for busy households — not the cheapest pound, the
+            laundry day you get back.
+          </p>
+        </div>
+        <SectionMedia
+          src="/images/towels-stack.jpg"
+          alt="Folded towel stack accent for FreshFold value"
+          className="hidden aspect-[4/3] lg:block"
+        />
+      </div>
       <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {ITEMS.map((item) => (
           <li key={item.title} className="flex gap-4">

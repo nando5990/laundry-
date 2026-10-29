@@ -1,3 +1,5 @@
+import { SectionMedia } from '@/components/marketing/SectionMedia'
+
 export function BeforeAfter() {
   return (
     <section className="section-pad mx-auto max-w-6xl py-16 md:py-20">
@@ -9,6 +11,11 @@ export function BeforeAfter() {
       </p>
       <div className="mt-10 grid gap-8 md:grid-cols-2">
         <div>
+          <SectionMedia
+            src="/images/laundry-basket.jpg"
+            alt="A basket of laundry waiting to be done"
+            className="aspect-[5/3] mb-5"
+          />
           <p className="text-xs font-semibold uppercase tracking-widest text-muted">
             Before
           </p>
@@ -22,6 +29,11 @@ export function BeforeAfter() {
           </ul>
         </div>
         <div>
+          <SectionMedia
+            src="/images/towels-stack.jpg"
+            alt="Soft folded towels stacked and ready"
+            className="aspect-[5/3] mb-5"
+          />
           <p className="text-xs font-semibold uppercase tracking-widest text-teal">
             After FreshFold
           </p>

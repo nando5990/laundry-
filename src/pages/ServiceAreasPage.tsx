@@ -1,3 +1,4 @@
+import { SectionMedia } from '@/components/marketing/SectionMedia'
 import { ZipChecker } from '@/components/marketing/ZipChecker'
 import { PageMeta } from '@/components/seo/PageMeta'
 import { Badge } from '@/components/ui/badge'
@@ -19,17 +20,26 @@ export function ServiceAreasPage() {
         description="FreshFold demo service ZIPs for Canton, Stoughton, and sample Brockton and Mattapan coverage in Massachusetts."
       />
       <section className="section-pad mx-auto max-w-6xl py-14 md:py-20">
-        <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
-          FreshFold
-        </p>
-        <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
-          Service areas
-        </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted">
-          Working launch geography: Canton and Stoughton, plus selected Brockton
-          and Mattapan ZIP codes. Use the checker below — results reflect demo
-          data only.
-        </p>
+        <div className="grid items-start gap-10 lg:grid-cols-2">
+          <div>
+            <p className="font-display text-sm font-bold uppercase tracking-widest text-teal">
+              FreshFold
+            </p>
+            <h1 className="mt-3 font-display text-4xl font-extrabold text-navy md:text-5xl">
+              Service areas
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-muted">
+              Working launch geography: Canton and Stoughton, plus selected
+              Brockton and Mattapan ZIP codes. Use the checker below — results
+              reflect demo data only.
+            </p>
+          </div>
+          <SectionMedia
+            src="/images/hotel-bed.jpg"
+            alt="Fresh linens in a tidy Massachusetts-style home bedroom"
+            className="aspect-[5/4]"
+          />
+        </div>
 
         <div className="mt-10">
           <ZipChecker id="areas-zip" />

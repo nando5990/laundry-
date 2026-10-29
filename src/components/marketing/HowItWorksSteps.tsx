@@ -1,18 +1,26 @@
+import { SectionMedia } from '@/components/marketing/SectionMedia'
+
 const STEPS = [
   {
     step: '01',
     title: 'Schedule pickup',
     body: 'Choose a plan, confirm your address in a service ZIP, and pick a doorstep window that fits your week.',
+    image: '/images/laundry-basket.jpg',
+    alt: 'Laundry basket ready for scheduled FreshFold pickup',
   },
   {
     step: '02',
     title: 'We wash & finish',
     body: 'Your laundry goes to a contracted processing partner. Preferences for detergent, softener, and fold style are followed.',
+    image: '/images/wash-step.jpg',
+    alt: 'Detergent measured for a careful home wash cycle',
   },
   {
     step: '03',
     title: 'Folded delivery',
     body: 'Clean, folded laundry returns on your delivery window — Saturday stays yours.',
+    image: '/images/towels-stack.jpg',
+    alt: 'Neatly folded towels ready for delivery',
   },
 ]
 
@@ -29,6 +37,11 @@ export function HowItWorksSteps() {
         <ol className="mt-12 grid gap-10 md:grid-cols-3">
           {STEPS.map((item) => (
             <li key={item.step}>
+              <SectionMedia
+                src={item.image}
+                alt={item.alt}
+                className="aspect-[4/3] mb-5"
+              />
               <p className="font-display text-sm font-bold tracking-widest text-teal">
                 {item.step}
               </p>
