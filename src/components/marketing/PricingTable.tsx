@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { CalendarDays, Gauge, Sparkles, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { ShopAccessories } from '@/components/marketing/ShopAccessories'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -103,7 +104,7 @@ export function PricingTable() {
 
       <div>
         <h3 className="font-display text-2xl font-bold text-navy">
-          Specialty items
+          Specialty laundry items
         </h3>
         <p className="mt-2 text-sm text-muted">
           Quoted separately — request a quote during booking or via contact.
@@ -122,6 +123,8 @@ export function PricingTable() {
           ))}
         </ul>
       </div>
+
+      <ShopAccessories />
     </div>
   )
 }

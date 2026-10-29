@@ -13,6 +13,16 @@ export interface SpecialtyItem {
   note: string
 }
 
+/** Fixed-price retail accessories — not laundry-by-weight. */
+export interface RetailAddon {
+  id: string
+  name: string
+  price: number
+  description: string
+  image: string
+  imageAlt: string
+}
+
 export const PRICING_PLANS: PricingPlan[] = [
   {
     id: 'one-time',
@@ -44,6 +54,22 @@ export const SPECIALTY_ITEMS: SpecialtyItem[] = [
   { id: 'rugs', name: 'Small rugs', note: 'Request a quote' },
   { id: 'bulk', name: 'Commercial / bulk bags', note: 'Request a quote' },
 ]
+
+export const RETAIL_ADDONS: RetailAddon[] = [
+  {
+    id: 'apple-earpods-35mm',
+    name: 'Apple iPhone EarPods Wired 3.5mm Headset',
+    price: 19.99,
+    description:
+      'Wired EarPods with 3.5mm plug — a handy accessory add-on while you book laundry service. Fixed retail price; not charged by the pound.',
+    image: '/images/apple-earpods-35mm.jpg',
+    imageAlt: 'Apple EarPods wired headset with 3.5mm connector',
+  },
+]
+
+export function getRetailAddon(id: string): RetailAddon | undefined {
+  return RETAIL_ADDONS.find((item) => item.id === id)
+}
 
 /** First Pickup Special — promotional rules for Phase 1 display. */
 export const FIRST_PICKUP_SPECIAL = {

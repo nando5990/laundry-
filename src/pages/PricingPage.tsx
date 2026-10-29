@@ -9,7 +9,7 @@ export function PricingPage() {
     <>
       <PageMeta
         title="Pricing — FreshFold"
-        description="Wash & fold from $2.69–$3.29/lb with clear minimums. First Pickup Special 10% off up to $15. Specialty items by quote."
+        description="Wash & fold from $2.69–$3.29/lb with clear minimums. Shop accessories including Apple EarPods at $19.99. Specialty laundry items by quote."
       />
       <section className="section-pad mx-auto max-w-6xl py-14 md:py-20">
         <div className="grid items-end gap-8 lg:grid-cols-[1.5fr_0.7fr]">
