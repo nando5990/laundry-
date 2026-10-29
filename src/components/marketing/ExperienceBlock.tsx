@@ -10,9 +10,10 @@ export function ExperienceBlock() {
           </h2>
           <p className="mt-4 text-muted leading-relaxed">
             FreshFold owns the customer relationship — scheduling, preferences,
-            and care. Washing happens with trusted processing partners; drivers
-            handle last-mile pickup and delivery. You get premium convenience
-            without the commodity “cheapest pound” feel.
+            and care. Washing happens with trusted processing partners; you can
+            use doorstep pickup or drop off at a partner location where offered.
+            You get premium convenience without the commodity “cheapest pound”
+            feel.
           </p>
         </div>
         <div className="relative">

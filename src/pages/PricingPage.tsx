@@ -21,8 +21,9 @@ export function PricingPage() {
               Pricing
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted">
-              Transparent per-pound rates and minimums. Final charge is settled
-              after actual weight at intake — Phase 2 pricing runs server-side.
+              Transparent per-pound rates and minimums for doorstep pickup or
+              partner drop-off where offered. Final charge is settled after
+              actual weight at intake — Phase 2 pricing runs server-side.
             </p>
           </div>
           <SectionMedia

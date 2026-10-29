@@ -2,7 +2,7 @@ export const BRAND = {
   name: 'FreshFold',
   tagline: 'Get Your Laundry Day Back.',
   supportSentence:
-    'Scheduled pickup, professional wash & fold, and folded delivery — so laundry never steals your weekend.',
+    'Doorstep pickup or partner drop-off where offered, then wash & fold and folded return — so laundry never steals your weekend.',
   region: 'Massachusetts — Canton, Stoughton & select Greater Boston ZIPs',
 } as const
 

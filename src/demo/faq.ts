@@ -11,14 +11,21 @@ export const FAQ_ITEMS: FaqItem[] = [
     category: 'offer',
     question: 'What is FreshFold?',
     answer:
-      'FreshFold is a laundry pickup and delivery service for busy households and light commercial accounts in Massachusetts. We schedule pickup, partner facilities wash and finish your laundry, and we deliver it folded back to your door.',
+      'FreshFold is a laundry pickup and delivery service for busy households and light commercial accounts in Massachusetts. You can schedule doorstep pickup or drop off at a partner location where offered; partner facilities wash and finish your laundry, then we return it folded — usually to your door.',
+  },
+  {
+    id: 'drop-off',
+    category: 'service',
+    question: 'Can I drop off laundry instead of doorstep pickup?',
+    answer:
+      'Yes, where drop-off is offered. During booking you can choose “Drop off at partner location,” see the partner address (clearly labeled demo until a real location is confirmed), pick a drop-off window, and choose whether clean laundry returns to your doorstep (default) or you pick it up at the partner. Availability depends on your service area.',
   },
   {
     id: 'grand-slam',
     category: 'offer',
     question: 'What does “Get Your Laundry Day Back” mean?',
     answer:
-      'It’s our Grand Slam Offer: scheduled pickup, professional wash & fold (or specialty care), and folded delivery — so you never spend a Saturday on laundry.',
+      'It’s our Grand Slam Offer: scheduled doorstep pickup or partner drop-off where offered, professional wash & fold (or specialty care), and folded return — so you never spend a Saturday on laundry.',
   },
   {
     id: 'how-pricing',

@@ -95,9 +95,9 @@ export function PricingTable() {
         <Gauge className="mt-0.5 size-4 shrink-0 text-teal" aria-hidden />
         <span>
           <span className="font-semibold text-navy">How billing works: </span>
-          You book a plan and pickup window now. Final charge settles after
-          actual weight at intake — never a surprise add-on for the listed
-          wash & fold rate.
+          You book a plan and a pickup or drop-off window now. Final charge
+          settles after actual weight at intake — never a surprise add-on for
+          the listed wash & fold rate.
         </span>
       </p>
 

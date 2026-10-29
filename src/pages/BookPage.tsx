@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Home, MapPin } from 'lucide-react'
 
 import { PageMeta } from '@/components/seo/PageMeta'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +19,8 @@ import {
   BOOKING_STEPS,
   type BookingDraft,
   type BookingStep,
+  DEMO_DROPOFF_DAYS,
+  DEMO_DROPOFF_WINDOWS,
   DEMO_PICKUP_DAYS,
   DEMO_PICKUP_WINDOWS,
   DETERGENT_OPTIONS,
@@ -25,6 +28,10 @@ import {
   FOLD_OPTIONS,
   SOFTENER_OPTIONS,
 } from '@/demo/booking'
+import {
+  DEMO_PARTNER_DROPOFF,
+  formatPartnerAddress,
+} from '@/demo/partners'
 import {
   FIRST_PICKUP_SPECIAL,
   formatMoney,
@@ -48,6 +55,9 @@ export function BookPage() {
   )
 
   const zipMatch = lookupDemoZip(draft.zip)
+  const isDropoff = draft.intakeMode === 'dropoff'
+  const needsHomeAddress =
+    draft.intakeMode === 'doorstep' || draft.returnMode === 'doorstep'
 
   function update<K extends keyof BookingDraft>(key: K, value: BookingDraft[K]) {
     setDraft((d) => ({ ...d, [key]: value }))
@@ -56,14 +66,20 @@ export function BookPage() {
 
   function validateCurrent(): string[] {
     switch (step) {
-      case 'service':
-        return draft.planId ? [] : ['Choose a service plan.']
+      case 'service': {
+        const next: string[] = []
+        if (!draft.planId) next.push('Choose a service plan.')
+        if (!draft.intakeMode) next.push('Choose doorstep pickup or partner drop-off.')
+        return next
+      }
       case 'address': {
         const next: string[] = []
         if (!draft.fullName.trim()) next.push('Name is required.')
         if (!draft.email.trim()) next.push('Email is required.')
-        if (!draft.street.trim()) next.push('Street address is required.')
-        if (!draft.city.trim()) next.push('City is required.')
+        if (needsHomeAddress) {
+          if (!draft.street.trim()) next.push('Street address is required.')
+          if (!draft.city.trim()) next.push('City is required.')
+        }
         if (normalizeZip(draft.zip).length !== 5) next.push('Enter a 5-digit ZIP.')
         else if (!isDemoServiceZip(draft.zip))
           next.push(
@@ -73,8 +89,18 @@ export function BookPage() {
       }
       case 'schedule': {
         const next: string[] = []
-        if (!draft.pickupDay) next.push('Choose a pickup day.')
-        if (!draft.pickupWindow) next.push('Choose a pickup window.')
+        if (!draft.pickupDay)
+          next.push(
+            isDropoff ? 'Choose a drop-off day.' : 'Choose a pickup day.',
+          )
+        if (!draft.pickupWindow)
+          next.push(
+            isDropoff
+              ? 'Choose a drop-off window.'
+              : 'Choose a pickup window.',
+          )
+        if (isDropoff && !draft.returnMode)
+          next.push('Choose how clean laundry should be returned.')
         return next
       }
       default:
@@ -104,11 +130,14 @@ export function BookPage() {
     }
   }
 
+  const dayOptions = isDropoff ? DEMO_DROPOFF_DAYS : DEMO_PICKUP_DAYS
+  const windowOptions = isDropoff ? DEMO_DROPOFF_WINDOWS : DEMO_PICKUP_WINDOWS
+
   return (
     <>
       <PageMeta
-        title="Book pickup — FreshFold"
-        description="Demo booking flow for FreshFold laundry pickup. Multi-step through review; payment is Phase 2 and does not charge."
+        title="Book laundry — FreshFold"
+        description="Demo booking for FreshFold: doorstep pickup or partner drop-off. Multi-step through review; payment is Phase 2 and does not charge."
       />
       <section className="section-pad mx-auto max-w-3xl py-10 md:py-16">
         <div className="flex flex-wrap items-center gap-2">
@@ -118,11 +147,12 @@ export function BookPage() {
           <Badge variant="demo">Demo booking</Badge>
         </div>
         <h1 className="mt-3 font-display text-3xl font-extrabold text-navy md:text-4xl">
-          Book a pickup
+          Book laundry service
         </h1>
         <p className="mt-3 text-muted">
-          Walk through service, address, schedule, preferences, and review.
-          Payment is marked Phase 2 and will not charge a card.
+          Choose doorstep pickup or partner drop-off, then walk through address,
+          schedule, preferences, and review. Payment is Phase 2 and will not
+          charge a card.
         </p>
 
         <ol className="mt-8 flex flex-wrap gap-2">
@@ -158,11 +188,70 @@ export function BookPage() {
 
         <div className="mt-8 space-y-6">
           {step === 'service' && (
-            <div className="space-y-4">
-              <h2 className="font-display text-xl font-bold text-navy">
-                Choose your service
-              </h2>
+            <div className="space-y-6">
               <div className="space-y-3">
+                <h2 className="font-display text-xl font-bold text-navy">
+                  How will you hand off laundry?
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDraft((d) => ({
+                        ...d,
+                        intakeMode: 'doorstep',
+                        returnMode: 'doorstep',
+                      }))
+                      setErrors([])
+                    }}
+                    className={cn(
+                      'rounded-2xl border p-4 text-left transition-colors',
+                      draft.intakeMode === 'doorstep'
+                        ? 'border-teal bg-teal/5 ring-2 ring-teal/20'
+                        : 'border-border bg-white hover:bg-off-white',
+                    )}
+                  >
+                    <Home className="mb-2 size-5 text-teal" aria-hidden />
+                    <span className="block font-display font-semibold text-navy">
+                      Doorstep pickup
+                    </span>
+                    <span className="mt-1 block text-sm text-muted">
+                      We collect bags from your address on a scheduled window.
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setDraft((d) => ({
+                        ...d,
+                        intakeMode: 'dropoff',
+                        returnMode: d.returnMode || 'doorstep',
+                      }))
+                      setErrors([])
+                    }}
+                    className={cn(
+                      'rounded-2xl border p-4 text-left transition-colors',
+                      draft.intakeMode === 'dropoff'
+                        ? 'border-teal bg-teal/5 ring-2 ring-teal/20'
+                        : 'border-border bg-white hover:bg-off-white',
+                    )}
+                  >
+                    <MapPin className="mb-2 size-5 text-teal" aria-hidden />
+                    <span className="block font-display font-semibold text-navy">
+                      Drop off at partner
+                    </span>
+                    <span className="mt-1 block text-sm text-muted">
+                      Bring laundry to a partner location where drop-off is
+                      offered.
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h2 className="font-display text-xl font-bold text-navy">
+                  Choose your plan
+                </h2>
                 {PRICING_PLANS.map((p) => (
                   <label
                     key={p.id}
@@ -192,6 +281,7 @@ export function BookPage() {
                   </label>
                 ))}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="bags">Estimated bags</Label>
                 <Select
@@ -233,10 +323,31 @@ export function BookPage() {
           )}
 
           {step === 'address' && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <h2 className="font-display text-xl font-bold text-navy">
-                Pickup address
+                {isDropoff ? 'Contact & service ZIP' : 'Pickup address'}
               </h2>
+
+              {isDropoff && (
+                <div className="rounded-2xl border border-blush bg-petal/40 p-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-display font-semibold text-navy">
+                      Partner drop-off location
+                    </p>
+                    <Badge variant="demo">{DEMO_PARTNER_DROPOFF.demoLabel}</Badge>
+                  </div>
+                  <p className="mt-2 text-sm text-navy">
+                    {DEMO_PARTNER_DROPOFF.name}
+                  </p>
+                  <p className="mt-1 text-sm text-muted">
+                    {formatPartnerAddress()}
+                  </p>
+                  <p className="mt-2 text-xs text-muted">
+                    {DEMO_PARTNER_DROPOFF.hoursNote}
+                  </p>
+                </div>
+              )}
+
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="name">Full name</Label>
@@ -263,30 +374,45 @@ export function BookPage() {
                     onChange={(e) => update('phone', e.target.value)}
                   />
                 </div>
-                <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="street">Street</Label>
-                  <Input
-                    id="street"
-                    value={draft.street}
-                    onChange={(e) => update('street', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="unit">Unit (optional)</Label>
-                  <Input
-                    id="unit"
-                    value={draft.unit}
-                    onChange={(e) => update('unit', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    value={draft.city}
-                    onChange={(e) => update('city', e.target.value)}
-                  />
-                </div>
+
+                {needsHomeAddress && (
+                  <>
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="street">
+                        {isDropoff
+                          ? 'Return / home street'
+                          : 'Street'}
+                      </Label>
+                      <Input
+                        id="street"
+                        value={draft.street}
+                        onChange={(e) => update('street', e.target.value)}
+                      />
+                      {isDropoff && (
+                        <p className="text-xs text-muted">
+                          Used for doorstep return of clean laundry.
+                        </p>
+                      )}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="unit">Unit (optional)</Label>
+                      <Input
+                        id="unit"
+                        value={draft.unit}
+                        onChange={(e) => update('unit', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        value={draft.city}
+                        onChange={(e) => update('city', e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+
                 <div className="space-y-2">
                   <Label htmlFor="book-zip">ZIP</Label>
                   <Input
@@ -310,16 +436,16 @@ export function BookPage() {
           )}
 
           {step === 'schedule' && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <h2 className="font-display text-xl font-bold text-navy">
-                Pickup schedule
+                {isDropoff ? 'Drop-off schedule' : 'Pickup schedule'}
               </h2>
               <p className="text-sm text-muted">
                 Demo windows only — live capacity calendars arrive in Phase 2.
                 No GPS or live driver tracking.
               </p>
               <div className="space-y-2">
-                <Label>Pickup day</Label>
+                <Label>{isDropoff ? 'Drop-off day' : 'Pickup day'}</Label>
                 <Select
                   value={draft.pickupDay}
                   onValueChange={(v) => update('pickupDay', v)}
@@ -328,7 +454,7 @@ export function BookPage() {
                     <SelectValue placeholder="Select day" />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEMO_PICKUP_DAYS.map((d) => (
+                    {dayOptions.map((d) => (
                       <SelectItem key={d} value={d}>
                         {d}
                       </SelectItem>
@@ -337,7 +463,7 @@ export function BookPage() {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Pickup window</Label>
+                <Label>{isDropoff ? 'Drop-off window' : 'Pickup window'}</Label>
                 <Select
                   value={draft.pickupWindow}
                   onValueChange={(v) => update('pickupWindow', v)}
@@ -346,7 +472,7 @@ export function BookPage() {
                     <SelectValue placeholder="Select window" />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEMO_PICKUP_WINDOWS.map((w) => (
+                    {windowOptions.map((w) => (
                       <SelectItem key={w} value={w}>
                         {w}
                       </SelectItem>
@@ -354,6 +480,62 @@ export function BookPage() {
                   </SelectContent>
                 </Select>
               </div>
+
+              {isDropoff && (
+                <div className="space-y-3 rounded-2xl border border-border bg-white p-4">
+                  <h3 className="font-display font-semibold text-navy">
+                    How should clean laundry come back?
+                  </h3>
+                  <label
+                    className={cn(
+                      'flex cursor-pointer gap-3 rounded-xl border p-3',
+                      draft.returnMode === 'doorstep'
+                        ? 'border-teal bg-teal/5'
+                        : 'border-border',
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="returnMode"
+                      className="mt-1"
+                      checked={draft.returnMode === 'doorstep'}
+                      onChange={() => update('returnMode', 'doorstep')}
+                    />
+                    <span className="text-sm">
+                      <span className="font-semibold text-navy">
+                        Return to my doorstep
+                      </span>
+                      <span className="mt-0.5 block text-muted">
+                        Default — we deliver folded laundry to your address.
+                      </span>
+                    </span>
+                  </label>
+                  <label
+                    className={cn(
+                      'flex cursor-pointer gap-3 rounded-xl border p-3',
+                      draft.returnMode === 'partner-pickup'
+                        ? 'border-teal bg-teal/5'
+                        : 'border-border',
+                    )}
+                  >
+                    <input
+                      type="radio"
+                      name="returnMode"
+                      className="mt-1"
+                      checked={draft.returnMode === 'partner-pickup'}
+                      onChange={() => update('returnMode', 'partner-pickup')}
+                    />
+                    <span className="text-sm">
+                      <span className="font-semibold text-navy">
+                        I’ll pick up clean laundry
+                      </span>
+                      <span className="mt-0.5 block text-muted">
+                        Collect finished bags at the same demo partner location.
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              )}
             </div>
           )}
 
@@ -436,7 +618,30 @@ export function BookPage() {
               <dl className="divide-y divide-border border-y border-border text-sm">
                 {[
                   ['Plan', plan.name],
-                  ['Rate', `${formatMoney(plan.ratePerLb)}/lb · min ${formatMoney(plan.minimum)}`],
+                  [
+                    'Handoff',
+                    isDropoff
+                      ? 'Drop off at partner location'
+                      : 'Doorstep pickup',
+                  ],
+                  ...(isDropoff
+                    ? ([
+                        [
+                          'Partner',
+                          `${DEMO_PARTNER_DROPOFF.name} — ${formatPartnerAddress()} (demo)`,
+                        ],
+                        [
+                          'Return',
+                          draft.returnMode === 'partner-pickup'
+                            ? 'I’ll pick up clean laundry at partner'
+                            : 'Return to doorstep',
+                        ],
+                      ] as [string, string][])
+                    : []),
+                  [
+                    'Rate',
+                    `${formatMoney(plan.ratePerLb)}/lb · min ${formatMoney(plan.minimum)}`,
+                  ],
                   ['Bags (est.)', draft.estimatedBags],
                   [
                     'First Pickup Special',
@@ -447,11 +652,18 @@ export function BookPage() {
                   ['Name', draft.fullName],
                   ['Email', draft.email],
                   ['Phone', draft.phone || '—'],
+                  ...(needsHomeAddress
+                    ? ([
+                        [
+                          isDropoff ? 'Return address' : 'Address',
+                          `${draft.street}${draft.unit ? `, ${draft.unit}` : ''}, ${draft.city} ${draft.zip}`,
+                        ],
+                      ] as [string, string][])
+                    : ([['ZIP', draft.zip]] as [string, string][])),
                   [
-                    'Address',
-                    `${draft.street}${draft.unit ? `, ${draft.unit}` : ''}, ${draft.city} ${draft.zip}`,
+                    isDropoff ? 'Drop-off' : 'Pickup',
+                    `${draft.pickupDay}, ${draft.pickupWindow}`,
                   ],
-                  ['Pickup', `${draft.pickupDay}, ${draft.pickupWindow}`],
                   [
                     'Preferences',
                     `${DETERGENT_OPTIONS.find((o) => o.value === draft.detergent)?.label}, ${SOFTENER_OPTIONS.find((o) => o.value === draft.softener)?.label}, ${FOLD_OPTIONS.find((o) => o.value === draft.foldStyle)?.label}`,

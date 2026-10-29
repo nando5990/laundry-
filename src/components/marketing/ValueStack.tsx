@@ -3,8 +3,8 @@ import { CalendarCheck, Leaf, Package, Scale, Sparkles } from 'lucide-react'
 const ITEMS = [
   {
     icon: Package,
-    title: 'Doorstep pickup & delivery',
-    body: 'Scheduled windows at your address — no Saturday spent at the laundromat.',
+    title: 'Doorstep or partner drop-off',
+    body: 'Scheduled pickup at your address, or drop off where a partner location is offered — clean laundry returns folded.',
   },
   {
     icon: Leaf,

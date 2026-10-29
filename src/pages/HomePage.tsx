@@ -20,7 +20,7 @@ export function HomePage() {
     <>
       <PageMeta
         title="FreshFold — Get Your Laundry Day Back"
-        description="FreshFold laundry pickup and delivery for Canton, Stoughton, and select Greater Boston ZIPs. Scheduled pickup, wash & fold, folded delivery."
+        description="FreshFold laundry pickup and delivery for Canton, Stoughton, and select Greater Boston ZIPs. Doorstep pickup or partner drop-off where offered, wash & fold, folded return."
       />
       <Hero />
 
@@ -37,7 +37,8 @@ export function HomePage() {
             Simple, transparent pricing
           </h2>
           <p className="mt-3 max-w-xl text-muted">
-            Per-pound rates with clear minimums. Specialty items quoted
+            Per-pound rates with clear minimums — same plans for doorstep pickup
+            or partner drop-off where offered. Specialty items quoted
             separately. Final charge settles after weight.
           </p>
           <div className="mt-10">

@@ -9,7 +9,7 @@ export function HowItWorksPage() {
     <>
       <PageMeta
         title="How it works — FreshFold"
-        description="Schedule pickup, we wash and finish with your preferences, then deliver folded laundry to your door."
+        description="Schedule doorstep pickup or partner drop-off where offered, we wash and finish with your preferences, then return folded laundry."
       />
       <section className="section-pad mx-auto max-w-6xl py-14 md:py-20">
         <div className="grid items-center gap-10 lg:grid-cols-2">
@@ -22,8 +22,9 @@ export function HowItWorksPage() {
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted">
               An asset-light model: we own your experience end-to-end while
-              processing partners handle the wash — so you get reliability
-              without laundry-day chaos.
+              processing partners handle the wash. Start with doorstep pickup
+              or drop off at a partner location where offered — then get
+              reliability without laundry-day chaos.
             </p>
           </div>
           <img
@@ -40,7 +41,8 @@ export function HowItWorksPage() {
         </h2>
         <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           {[
-            'Pickup day and window',
+            'Doorstep pickup or partner drop-off (where offered)',
+            'Handoff day and window',
             'Detergent and softener preferences',
             'Fold style',
             'Order notes for special handling',

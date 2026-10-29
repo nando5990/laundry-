@@ -11,8 +11,8 @@ const STEPS: {
 }[] = [
   {
     step: '01',
-    title: 'Schedule pickup',
-    body: 'Choose a plan, confirm your address in a service ZIP, and pick a doorstep window that fits your week.',
+    title: 'Schedule handoff',
+    body: 'Choose doorstep pickup or partner drop-off where offered, confirm your ZIP, and pick a window that fits your week.',
     image: '/images/how-it-works/step-01-pickup.png',
     alt: 'FreshFold courier scheduling a doorstep laundry pickup',
     Icon: CalendarDays,
@@ -43,7 +43,8 @@ export function HowItWorksSteps() {
           How it works
         </h2>
         <p className="mt-3 max-w-xl text-muted">
-          Three steps. No machines. No folding piles on the couch.
+          Three steps. Doorstep or drop-off where offered — no folding piles
+          on the couch.
         </p>
 
         {/* Dotted connector path (desktop) */}
