@@ -44,8 +44,8 @@ export function ValueStack() {
           </p>
         </div>
         <SectionMedia
-          src="/images/towels-stack.jpg"
-          alt="Folded towel stack accent for FreshFold value"
+          src="/images/value-preferences.jpg"
+          alt="Folded towels with detergent and fold-style preference card"
           className="hidden aspect-[4/3] lg:block"
         />
       </div>

@@ -33,8 +33,8 @@ export function ServiceAreasPreview() {
           </Button>
         </div>
         <SectionMedia
-          src="/images/home-bedroom.jpg"
-          alt="Homey bedroom with fresh linens in the FreshFold service region"
+          src="/images/service-areas-porch.jpg"
+          alt="FreshFold tote on a Massachusetts neighborhood porch"
           className="aspect-[5/4]"
         />
       </div>

@@ -5,22 +5,22 @@ const STEPS = [
     step: '01',
     title: 'Schedule pickup',
     body: 'Choose a plan, confirm your address in a service ZIP, and pick a doorstep window that fits your week.',
-    image: '/images/laundry-basket.jpg',
-    alt: 'Laundry basket ready for scheduled FreshFold pickup',
+    image: '/images/hiw-01-schedule.jpg',
+    alt: 'FreshFold tote at the door with a calendar ready to schedule pickup',
   },
   {
     step: '02',
     title: 'We wash & finish',
     body: 'Your laundry goes to a contracted processing partner. Preferences for detergent, softener, and fold style are followed.',
-    image: '/images/wash-step.jpg',
-    alt: 'Detergent measured for a careful home wash cycle',
+    image: '/images/hiw-02-clean.jpg',
+    alt: 'Folded linens and preference detergents for FreshFold wash and finish',
   },
   {
     step: '03',
     title: 'Folded delivery',
     body: 'Clean, folded laundry returns on your delivery window — Saturday stays yours.',
-    image: '/images/towels-stack.jpg',
-    alt: 'Neatly folded towels ready for delivery',
+    image: '/images/hiw-03-deliver.jpg',
+    alt: 'FreshFold bag and folded towels delivered to a sunny porch',
   },
 ]
 

@@ -45,8 +45,8 @@ export function AboutPage() {
             </div>
           </div>
           <SectionMedia
-            src="/images/home-bedroom.jpg"
-            alt="Calm bedroom with fresh linens representing FreshFold care at home"
+            src="/images/about-brand-story.jpg"
+            alt="FreshFold tote and folded linens in a sunny home entry"
             className="aspect-[4/5] max-h-[34rem]"
           />
         </div>

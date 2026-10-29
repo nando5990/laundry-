@@ -26,8 +26,8 @@ export function PricingPage() {
             </p>
           </div>
           <SectionMedia
-            src="/images/towels-stack.jpg"
-            alt="Soft folded towels suggesting finished FreshFold laundry"
+            src="/images/pricing-by-weight.jpg"
+            alt="Folded linens with a scale suggesting FreshFold per-pound pricing"
             className="aspect-[4/3]"
           />
         </div>

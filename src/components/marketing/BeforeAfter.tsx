@@ -12,8 +12,8 @@ export function BeforeAfter() {
       <div className="mt-10 grid gap-8 md:grid-cols-2">
         <div>
           <SectionMedia
-            src="/images/laundry-basket.jpg"
-            alt="A basket of laundry waiting to be done"
+            src="/images/before-laundry-chaos.jpg"
+            alt="Overflowing laundry basket on a busy home couch"
             className="aspect-[5/3] mb-5"
           />
           <p className="text-xs font-semibold uppercase tracking-widest text-muted">
@@ -30,8 +30,8 @@ export function BeforeAfter() {
         </div>
         <div>
           <SectionMedia
-            src="/images/towels-stack.jpg"
-            alt="Soft folded towels stacked and ready"
+            src="/images/after-freshfold-return.jpg"
+            alt="FreshFold bag and neatly folded laundry returned at the door"
             className="aspect-[5/3] mb-5"
           />
           <p className="text-xs font-semibold uppercase tracking-widest text-teal">
