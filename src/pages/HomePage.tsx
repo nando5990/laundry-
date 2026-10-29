@@ -31,7 +31,7 @@ export function HomePage() {
       <HowItWorksSteps />
       <ExperienceBlock />
 
-      <section className="bg-off-white py-16 md:py-20">
+      <section className="bg-petal/50 py-16 md:py-20">
         <div className="section-pad mx-auto max-w-6xl">
           <h2 className="font-display text-3xl font-bold text-navy md:text-4xl">
             Simple, transparent pricing
