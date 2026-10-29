@@ -13,7 +13,7 @@ export function BeforeAfter() {
         <div>
           <SectionMedia
             src="/images/before-laundry-chaos.jpg"
-            alt="Overflowing laundry basket on a busy home couch"
+            alt="Overflowing laundry basket waiting at home"
             className="aspect-[5/3] mb-5"
           />
           <p className="text-xs font-semibold uppercase tracking-widest text-muted">
@@ -31,7 +31,7 @@ export function BeforeAfter() {
         <div>
           <SectionMedia
             src="/images/after-freshfold-return.jpg"
-            alt="FreshFold bag and neatly folded laundry returned at the door"
+            alt="Neatly folded towels returned clean and ready"
             className="aspect-[5/3] mb-5"
           />
           <p className="text-xs font-semibold uppercase tracking-widest text-teal">

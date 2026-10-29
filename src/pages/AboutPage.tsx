@@ -46,7 +46,7 @@ export function AboutPage() {
           </div>
           <SectionMedia
             src="/images/about-brand-story.jpg"
-            alt="FreshFold tote and folded linens in a sunny home entry"
+            alt="Calm home bedroom with fresh linens after laundry day"
             className="aspect-[4/5] max-h-[34rem]"
           />
         </div>

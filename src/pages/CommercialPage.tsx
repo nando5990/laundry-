@@ -59,7 +59,7 @@ export function CommercialPage() {
           </div>
           <SectionMedia
             src="/images/commercial-linens.jpg"
-            alt="Stacked white towels and robes ready for light commercial FreshFold service"
+            alt="Clean bathroom with folded towels ready for light commercial accounts"
             className="aspect-[5/4]"
           />
         </div>

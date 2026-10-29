@@ -34,7 +34,7 @@ export function ServiceAreasPreview() {
         </div>
         <SectionMedia
           src="/images/service-areas-porch.jpg"
-          alt="FreshFold tote on a Massachusetts neighborhood porch"
+          alt="Residential Massachusetts neighborhood home FreshFold serves"
           className="aspect-[5/4]"
         />
       </div>

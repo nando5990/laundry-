@@ -36,7 +36,7 @@ export function ServiceAreasPage() {
           </div>
           <SectionMedia
             src="/images/service-areas-porch.jpg"
-            alt="FreshFold tote on a sunny Massachusetts residential porch"
+            alt="Classic Massachusetts-style residential home in the service area"
             className="aspect-[5/4]"
           />
         </div>
