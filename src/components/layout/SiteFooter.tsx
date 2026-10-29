@@ -37,10 +37,10 @@ export function SiteFooter() {
       <div className="section-pad mx-auto grid max-w-6xl gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <p className="font-display text-2xl font-extrabold">{BRAND.name}</p>
-          <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">
+          <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/75">
             {BRAND.tagline} Laundry pickup & delivery for {BRAND.region}.
           </p>
-          <p className="mt-4 text-sm text-white/55">
+          <p className="mt-4 text-sm text-white/60">
             {CONTACT.email}
             <br />
             {CONTACT.phone} · {CONTACT.hours}
@@ -52,7 +52,7 @@ export function SiteFooter() {
 
         {FOOTER_LINKS.map((group) => (
           <div key={group.heading}>
-            <p className="text-sm font-semibold text-teal">{group.heading}</p>
+            <p className="text-sm font-semibold text-blush">{group.heading}</p>
             <ul className="mt-4 space-y-2">
               {group.links.map((link) => (
                 <li key={link.to}>

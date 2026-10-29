@@ -26,9 +26,12 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-navy/95 text-white backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-white/80 text-navy backdrop-blur-md">
       <div className="section-pad mx-auto flex h-16 max-w-6xl items-center justify-between gap-4">
-        <Link to="/" className="font-display text-xl font-extrabold tracking-tight">
+        <Link
+          to="/"
+          className="font-display text-xl font-extrabold tracking-tight text-navy"
+        >
           {BRAND.name}
         </Link>
 
@@ -39,8 +42,8 @@ export function SiteHeader() {
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'text-sm font-medium text-white/75 transition-colors hover:text-white',
-                  isActive && 'text-teal',
+                  'text-sm font-medium text-muted transition-colors hover:text-navy',
+                  isActive && 'text-teal-dark',
                 )
               }
             >
@@ -50,7 +53,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="secondary" size="sm">
             <Link to="/login">Log in</Link>
           </Button>
           <Button asChild size="sm">
@@ -61,7 +64,7 @@ export function SiteHeader() {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
               className="lg:hidden"
               aria-label="Open menu"

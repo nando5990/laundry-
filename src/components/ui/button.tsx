@@ -5,16 +5,16 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-teal text-white hover:bg-teal-dark',
+        default: 'bg-teal text-white hover:bg-teal-dark shadow-sm shadow-teal/25',
         secondary:
-          'bg-white text-navy border border-border hover:bg-off-white',
+          'bg-white text-navy border border-border hover:bg-petal',
         outline:
-          'border border-white/40 bg-transparent text-white hover:bg-white/10',
-        ghost: 'bg-transparent text-navy hover:bg-navy/5',
+          'border border-navy/20 bg-white/50 text-navy hover:bg-white',
+        ghost: 'bg-transparent text-navy hover:bg-petal',
         navy: 'bg-navy text-white hover:bg-dark',
       },
       size: {

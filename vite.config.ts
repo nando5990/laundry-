@@ -13,4 +13,10 @@ export default defineConfig({
       '@': path.resolve(rootDir, './src'),
     },
   },
+  server: {
+    host: '0.0.0.0',
+    port: 5173,
+    // Allow phone preview via temporary tunnels (loca.lt / trycloudflare.com)
+    allowedHosts: true,
+  },
 })

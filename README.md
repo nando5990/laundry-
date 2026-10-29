@@ -11,7 +11,7 @@ Phase 1 is **demo-safe**: clearly marked sample data, no live Stripe / Supabase 
 - React Router
 - Netlify-ready (`netlify.toml` SPA redirects)
 - Fonts: Manrope (display) + Inter (body)
-- Colors: navy `#132238`, teal `#14B8A6`, off-white `#F8FAF9`, white `#FFFFFF`, dark `#182230`, muted `#667085`
+- Colors (feminine blush refresh): berry `#4A2C3A`, rose `#E8799A`, blush off-white `#FFF5F8`, white `#FFFFFF`, soft dark `#2F2430`, muted mauve `#8B7380`
 
 ## Setup
 

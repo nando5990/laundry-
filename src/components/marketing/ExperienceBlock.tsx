@@ -15,14 +15,14 @@ export function ExperienceBlock() {
         </div>
         <div
           aria-hidden
-          className="relative min-h-56 overflow-hidden rounded-lg bg-gradient-to-br from-navy via-[#1a3348] to-teal/40"
+          className="relative min-h-56 overflow-hidden rounded-2xl bg-gradient-to-br from-petal via-blush to-teal/40"
         >
-          <div className="absolute inset-6 border border-white/15 bg-white/5" />
+          <div className="absolute inset-6 rounded-xl border border-white/50 bg-white/25" />
           <div className="absolute bottom-8 left-8 right-8">
-            <p className="font-display text-2xl font-bold text-white">
+            <p className="font-display text-2xl font-bold text-navy">
               Doorstep in. Folded out.
             </p>
-            <p className="mt-2 text-sm text-white/70">
+            <p className="mt-2 text-sm text-navy/70">
               South Shore & Greater Boston fringe
             </p>
           </div>
