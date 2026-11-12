@@ -30,9 +30,9 @@ export function PricingTable() {
             <div
               key={plan.id}
               className={cn(
-                'relative flex flex-col rounded-3xl border bg-white p-6 shadow-[0_10px_28px_rgba(232,121,154,0.10)]',
+                'relative flex flex-col rounded-3xl border bg-white p-6 shadow-[0_10px_28px_rgba(47,111,237,0.10)]',
                 featured
-                  ? 'border-teal ring-2 ring-teal/25 md:-translate-y-1 md:shadow-[0_16px_40px_rgba(232,121,154,0.18)]'
+                  ? 'border-teal ring-2 ring-teal/25 md:-translate-y-1 md:shadow-[0_16px_40px_rgba(47,111,237,0.18)]'
                   : 'border-border',
               )}
             >

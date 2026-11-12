@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* Soft feminine FreshFold palette — blush rose, not teal */
-  --color-navy: #4a2c3a;
-  --color-teal: #e8799a;
-  --color-teal-dark: #d45a7e;
-  --color-off-white: #fff5f8;
+  /* FreshFold blue palette — deep navy + clear blue accent */
+  --color-navy: #1b3a5c;
+  --color-teal: #2f6fed;
+  --color-teal-dark: #1e56c7;
+  --color-off-white: #f3f7fc;
   --color-surface: #ffffff;
-  --color-dark: #2f2430;
-  --color-muted: #8b7380;
-  --color-border: #f0dde4;
+  --color-dark: #1a2b3c;
+  --color-muted: #6b7c93;
+  --color-border: #d5e2f0;
   --color-success: #5a9e7a;
   --color-warning: #e8a05c;
-  --color-blush: #ffd6e3;
-  --color-petal: #fce4ec;
+  --color-blush: #b8d4f0;
+  --color-petal: #e8f1fb;
 
   --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -41,8 +41,8 @@
     color: var(--color-dark);
     background-color: var(--color-off-white);
     background-image:
-      radial-gradient(ellipse 70% 40% at 10% 0%, rgba(232, 121, 154, 0.12), transparent 55%),
-      radial-gradient(ellipse 50% 30% at 90% 10%, rgba(252, 228, 236, 0.9), transparent 50%);
+      radial-gradient(ellipse 70% 40% at 10% 0%, rgba(47, 111, 237, 0.12), transparent 55%),
+      radial-gradient(ellipse 50% 30% at 90% 10%, rgba(232, 241, 251, 0.95), transparent 50%);
     background-attachment: fixed;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -79,9 +79,9 @@
 
   .hero-atmosphere {
     background:
-      radial-gradient(ellipse 70% 55% at 78% 18%, rgba(255, 214, 227, 0.95), transparent 58%),
-      radial-gradient(ellipse 45% 40% at 12% 85%, rgba(232, 121, 154, 0.22), transparent 50%),
-      linear-gradient(165deg, #fff8fb 0%, #ffe4ef 42%, #f7c6d8 100%);
+      radial-gradient(ellipse 70% 55% at 78% 18%, rgba(184, 212, 240, 0.95), transparent 58%),
+      radial-gradient(ellipse 45% 40% at 12% 85%, rgba(47, 111, 237, 0.18), transparent 50%),
+      linear-gradient(165deg, #f7faff 0%, #e3eefc 42%, #c5daf5 100%);
   }
 
   .section-pad {

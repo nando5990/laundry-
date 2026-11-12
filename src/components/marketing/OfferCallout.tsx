@@ -28,7 +28,7 @@ export function OfferCallout() {
         </div>
         <SectionMedia
           src="/images/offer-first-pickup.jpg"
-          alt="Soft blush towels ready for a first FreshFold pickup"
+          alt="Soft folded towels ready for a first FreshFold pickup"
           className="aspect-[4/3]"
         />
       </div>

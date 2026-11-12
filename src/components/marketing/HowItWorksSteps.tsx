@@ -57,7 +57,7 @@ export function HowItWorksSteps() {
         >
           <path
             d="M40 70 C 180 10, 320 10, 500 55 S 820 100, 960 40"
-            stroke="#E8799A"
+            stroke="#2F6FED"
             strokeWidth="2.5"
             strokeDasharray="6 10"
             strokeLinecap="round"
@@ -68,7 +68,7 @@ export function HowItWorksSteps() {
         <ol className="relative z-10 mt-12 grid gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
           {STEPS.map((item) => (
             <li key={item.step} className="flex">
-              <article className="flex w-full flex-col overflow-hidden rounded-3xl border border-blush bg-white shadow-[0_10px_30px_rgba(232,121,154,0.12)]">
+              <article className="flex w-full flex-col overflow-hidden rounded-3xl border border-blush bg-white shadow-[0_10px_30px_rgba(47,111,237,0.12)]">
                 <div className="relative bg-petal/40 px-3 pt-3">
                   <img
                     src={item.image}
