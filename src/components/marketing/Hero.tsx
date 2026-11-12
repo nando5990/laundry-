@@ -29,7 +29,7 @@ export function Hero() {
 
         <div className="animate-fade-up-delay relative flex w-full items-center justify-center">
           <img
-            src="/images/freshfold-hero.png"
+            src="/images/freshfold-hero-blue.png"
             alt="FreshFold laundry bag and delivery van with Book, Pickup, Clean, and Deliver steps"
             className="h-auto w-full max-w-full object-contain"
             fetchPriority="high"
