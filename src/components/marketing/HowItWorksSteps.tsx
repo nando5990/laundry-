@@ -13,8 +13,8 @@ const STEPS: {
     step: '01',
     title: 'Schedule handoff',
     body: 'Choose doorstep pickup or partner drop-off where offered, confirm your ZIP, and pick a window that fits your week.',
-    image: '/images/how-it-works/step-01-pickup.png',
-    alt: 'FreshFold courier scheduling a doorstep laundry pickup',
+    image: '/images/how-it-works/step-01-schedule-handoff.jpg',
+    alt: 'FreshFold schedule handoff — booking a laundry pickup window',
     Icon: CalendarDays,
   },
   {
@@ -69,21 +69,17 @@ export function HowItWorksSteps() {
           {STEPS.map((item) => (
             <li key={item.step} className="flex">
               <article className="flex w-full flex-col overflow-hidden rounded-3xl border border-blush bg-white shadow-[0_10px_30px_rgba(47,111,237,0.12)]">
-                <div className="relative bg-petal/40 px-3 pt-3">
+                <div className="relative bg-petal/40 px-3 pt-3 pb-2">
                   <img
                     src={item.image}
                     alt={item.alt}
-                    className="mx-auto h-auto w-full max-h-56 object-contain sm:max-h-64"
+                    className="mx-auto block h-auto w-full object-contain"
                     loading="lazy"
                   />
-                  {/* Soft wave into white content */}
+                  {/* Soft wave into white content — does not crop the photo */}
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-white"
-                    style={{
-                      clipPath:
-                        'ellipse(75% 100% at 50% 100%)',
-                    }}
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent"
                   />
                 </div>
 
