@@ -21,8 +21,8 @@ const STEPS: {
     step: '02',
     title: 'We wash & finish',
     body: 'Your laundry goes to a contracted processing partner. Preferences for detergent, softener, and fold style are followed.',
-    image: '/images/how-it-works/step-02-wash.png',
-    alt: 'FreshFold partner folding towels after wash and finish',
+    image: '/images/how-it-works/step-02-wash-finish.jpg',
+    alt: 'FreshFold wash and finish — clean laundry being folded',
     Icon: Shirt,
   },
   {
