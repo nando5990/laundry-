@@ -29,8 +29,8 @@ const STEPS: {
     step: '03',
     title: 'Folded delivery',
     body: 'Clean, folded laundry returns on your delivery window — Saturday stays yours.',
-    image: '/images/how-it-works/step-03-deliver.png',
-    alt: 'FreshFold courier delivering neatly folded laundry',
+    image: '/images/how-it-works/step-03-folded-delivery.jpg',
+    alt: 'FreshFold folded delivery — clean laundry returned to the door',
     Icon: Truck,
   },
 ]
