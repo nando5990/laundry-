@@ -18,9 +18,9 @@ export function ExperienceBlock() {
         </div>
         <div className="relative">
           <SectionMedia
-            src="/images/experience-doorstep.jpg"
-            alt="Crisp freshly made bed representing laundry day returned"
-            className="aspect-[5/4]"
+            src="/images/doorstep-folded-out.jpg"
+            alt="FreshFold doorstep pickup and folded laundry return for South Shore households"
+            imgClassName="h-auto w-full object-contain"
           />
           <p className="mt-4 font-display text-xl font-bold text-navy">
             Doorstep in. Folded out.
